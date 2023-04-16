@@ -1,4 +1,5 @@
 defmodule Issues.CLI do
+  require IEx
   @default_count 4
   @moduledoc """
   Handle the command line parsing and the dispatch to
@@ -59,6 +60,55 @@ defmodule Issues.CLI do
     list
     |> Enum.take(count)
     |> Enum.reverse()
+  end
+
+  # For the display exercise
+  # Enum.reduce([map], acc, fun) |> IO.inspect()
+  # with acc being set as the header could work
+  # Enum.at(map, index)["created_at"]
+  # Enum.at(map, index)["id"]
+  # Enum.at(map, index)["title"]
+
+  def test_format() do
+    {:ok, data} = Issues.GithubIssues.fetch("elixir-lang", "elixir")
+
+    # format_github(data)
+
+    # id_format(4466464646, )
+
+    max_issue_length(data)
+  end
+
+  def max_issue_length(list) do
+    list_of_id =
+      Enum.map(list, fn elem -> "#{elem["id"]}" end)
+      |> IO.inspect()
+
+    Enum.map(list_of_id, fn elem -> String.length(elem) end)
+    # |> IO.inspect()
+  end
+
+  def id_format(id, id_max_length) do
+    String.pad_trailing("#{id}", id_max_length, " ")
+    |> IO.inspect()
+  end
+
+  def format_github(list) do
+    id_max_length = max_issue_length(list)
+
+    Enum.reduce(
+      list,
+      " # | created_at | title             \n",
+      fn map_issue, acc ->
+        date = map_issue["created_at"]
+        id = map_issue["id"]
+        id_format = id_format(id, id_max_length)
+        title = map_issue["title"]
+
+        acc <> "#{id} | #{date} | #{title} \n"
+      end
+    )
+    |> IO.puts()
   end
 
   # book exercise
