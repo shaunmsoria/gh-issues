@@ -76,25 +76,32 @@ defmodule Issues.CLI do
 
     # id_format(4466464646, )
 
-    max_issue_length(data)
+    format_header(data)
+
+    # max_length(id_list(data))
   end
 
-  def max_issue_length(list) do
-    list_of_id =
-      Enum.map(list, fn elem -> "#{elem["id"]}" end)
+  def id_list(list), do: Enum.map(list, fn elem -> "#{elem["id"]}" end)
+
+  def max_length(list) do
+    for elem <- list do
+      elem |> String.length()
+    end
+    |> Enum.max()
+  end
+
+  def elem_format(elem, elem_max_length), do: String.pad_trailing("#{elem}", elem_max_length, " ")
+
+  def format_header(list) do
+    id_max_length = max_length(id_list(list))
+
+    date_max_length =
+      max_length(Enum.at(list, 0)["created_at"])
       |> IO.inspect()
-
-    Enum.map(list_of_id, fn elem -> String.length(elem) end)
-    # |> IO.inspect()
-  end
-
-  def id_format(id, id_max_length) do
-    String.pad_trailing("#{id}", id_max_length, " ")
-    |> IO.inspect()
   end
 
   def format_github(list) do
-    id_max_length = max_issue_length(list)
+    id_max_length = max_length(id_list(list))
 
     Enum.reduce(
       list,
@@ -102,10 +109,10 @@ defmodule Issues.CLI do
       fn map_issue, acc ->
         date = map_issue["created_at"]
         id = map_issue["id"]
-        id_format = id_format(id, id_max_length)
+        id_format = elem_format(id, id_max_length)
         title = map_issue["title"]
 
-        acc <> "#{id} | #{date} | #{title} \n"
+        acc <> "#{id_format} | #{date} | #{title} \n"
       end
     )
     |> IO.puts()
