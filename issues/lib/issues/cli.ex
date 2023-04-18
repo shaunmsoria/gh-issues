@@ -62,61 +62,61 @@ defmodule Issues.CLI do
     |> Enum.reverse()
   end
 
-  # For the display exercise
-  # Enum.reduce([map], acc, fun) |> IO.inspect()
-  # with acc being set as the header could work
-  # Enum.at(map, index)["created_at"]
-  # Enum.at(map, index)["id"]
-  # Enum.at(map, index)["title"]
+  # Exercise
+  # def test_format() do
+  #   {:ok, data} = Issues.GithubIssues.fetch("elixir-lang", "elixir")
 
-  def test_format() do
-    {:ok, data} = Issues.GithubIssues.fetch("elixir-lang", "elixir")
+  #   format_github(data)
 
-    # format_github(data)
+  # end
 
-    # id_format(4466464646, )
+  # def id_list(list), do: Enum.map(list, fn elem -> "#{elem["id"]}" end)
+  # def date_list(list), do: Enum.map(list, fn elem -> "#{elem["create_at"]}" end)
+  # def title_list(list), do: Enum.map(list, fn elem -> "#{elem["title"]}" end)
 
-    format_header(data)
+  # def max_length(list) do
+  #   for elem <- list do
+  #     elem |> String.length()
+  #   end
+  #   |> Enum.max()
+  # end
 
-    # max_length(id_list(data))
-  end
+  # def elem_format(elem, elem_max_length), do: String.pad_trailing("#{elem}", elem_max_length, " ")
 
-  def id_list(list), do: Enum.map(list, fn elem -> "#{elem["id"]}" end)
+  # def format_header(list) do
+  #   id_max_length = max_length(id_list(list))
 
-  def max_length(list) do
-    for elem <- list do
-      elem |> String.length()
-    end
-    |> Enum.max()
-  end
+  #   date_max_length = String.length(Enum.at(list, 0)["created_at"])
 
-  def elem_format(elem, elem_max_length), do: String.pad_trailing("#{elem}", elem_max_length, " ")
+  #   title_max_length = max_length(title_list(list))
 
-  def format_header(list) do
-    id_max_length = max_length(id_list(list))
+  #   header_line1 =
+  #     " #{elem_format("#", id_max_length - 1)} | #{elem_format("created_at", date_max_length)} | #{elem_format("title", title_max_length)}\n"
 
-    date_max_length =
-      max_length(Enum.at(list, 0)["created_at"])
-      |> IO.inspect()
-  end
+  #   header_line2 =
+  #     "#{String.pad_trailing("", id_max_length + 1, "-")}+#{String.pad_trailing("", date_max_length + 2, "-")}+#{String.pad_trailing("", title_max_length + 2, "-")}\n"
 
-  def format_github(list) do
-    id_max_length = max_length(id_list(list))
+  #   header_line1 <> header_line2
+  # end
 
-    Enum.reduce(
-      list,
-      " # | created_at | title             \n",
-      fn map_issue, acc ->
-        date = map_issue["created_at"]
-        id = map_issue["id"]
-        id_format = elem_format(id, id_max_length)
-        title = map_issue["title"]
+  # def format_github(list) do
+  #   id_max_length = max_length(id_list(list))
+  #   header = format_header(list)
 
-        acc <> "#{id_format} | #{date} | #{title} \n"
-      end
-    )
-    |> IO.puts()
-  end
+  #   Enum.reduce(
+  #     list,
+  #     header,
+  #     fn map_issue, acc ->
+  #       date = map_issue["created_at"]
+  #       id = map_issue["id"]
+  #       id_format = elem_format(id, id_max_length)
+  #       title = map_issue["title"]
+
+  #       acc <> "#{id_format} | #{date} | #{title} \n"
+  #     end
+  #   )
+  #   |> IO.puts()
+  # end
 
   # book exercise
   # def t_last() do
